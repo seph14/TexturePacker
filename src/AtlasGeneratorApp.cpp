@@ -1,3 +1,12 @@
+//seph li
+//http://solid-jellyfish.com
+//2014-01-21
+//an atlas generator based on Paul.Houx's bin packaging code
+//(https://github.com/cinder/Cinder/pull/362)
+
+//known issue:
+//1. load a folder of textures in multi bin mode after clearing all textures will cause a rendering issue
+
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Utilities.h"
