@@ -20,5 +20,5 @@ Functions:
 Known issue:
 1. load a folder of textures in multi bin mode after clearing all textures will cause a rendering issue
 
-Todos:
+Todos:<br>
 1. ciUI block is actually out-of-date, so there might be more bugs related to the UI lurking somewhere, need to either improve it or implement another UI.
