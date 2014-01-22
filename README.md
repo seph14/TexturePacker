@@ -1,6 +1,6 @@
 AtlasGenerator
 ==============
-Seph Li
+author: Seph Li
 http://solid-jellyfish.com
 
 A tool packaging textures into single/multi atlas(es) and generate a Xml file saving all individual textures' name, position, size.
