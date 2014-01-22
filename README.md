@@ -1,4 +1,4 @@
-AtlasGenerator
+TexturePacker
 ==============
 author: Seph Li<br>
 http://solid-jellyfish.com
