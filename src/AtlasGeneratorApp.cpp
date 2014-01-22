@@ -1,7 +1,7 @@
 //seph li
 //http://solid-jellyfish.com
 //2014-01-21
-//an atlas generator based on Paul.Houx's bin packaging code
+//an atlas generator based on Paul.Houx's bin packing code
 //(https://github.com/cinder/Cinder/pull/362)
 
 //known issue:
@@ -35,14 +35,14 @@ public:
     void setupUI();
     void guiEvent(ciUIEvent *event);
     
-    void resizePackage( int w );
     void clear();
     
     bool addFolder();
     bool addTexture();
     
-    void exportPackage();
-    void doPack();
+    void exportBin();
+    void resizeBin( int w );
+    void pack();
     
     void prepareSettings(Settings *settings);
 	void setup();
@@ -144,28 +144,28 @@ void AtlasGeneratorApp::guiEvent(ciUIEvent *event){
     if( name == "Single" ){
         mMode = SINGLE;
         getWindow()->setTitle( "AtlasGenerator | Single Bin | " + toString(mUnpackedArea.size()) );
-        doPack();
+        pack();
     }else if( name == "Multi" ){
         mMode = MULTI;
         getWindow()->setTitle( "AtlasGenerator | Multi Bin | " + toString(mUnpackedArea.size()) );
-        doPack();
+        pack();
     }else if( name == "Add Texture" ){
         //hack: this appears to be a ciUI bug that this button is called twice if i open an file window
         if( hackTimer.getSeconds() < .2f )
             return;
         if(addTexture())
-            doPack();
+            pack();
     }else if( name == "Add Folder" ){
         //hack: this appears to be a ciUI bug that this button is called twice if i open an file window
         if( hackTimer.getSeconds() < .2f )
             return;
         if(addFolder())
-            doPack();
+            pack();
     }else if( name == "Export" ){
         //hack: this appears to be a ciUI bug that this button is called twice if i open an file window
         if( hackTimer.getSeconds() < .2f )
             return;
-        exportPackage();
+        exportBin();
     }else if( name == "Clear" )
         clear();
     else if( name == "Flip Texture" )
@@ -179,7 +179,7 @@ void AtlasGeneratorApp::guiEvent(ciUIEvent *event){
             if( size <= 0 )
                 throw new Exception();
             ((ciUITextInput *)gui->getWidget("size"))->setTextString(toString(size));
-            resizePackage(size);
+            resizeBin(size);
             
             int scaler = math<int>::min( 100 * 512.f / size, 100);
             ((ciUILabel *)gui->getWidget("info"))->setLabel("size: " + toString(scaler) + "%");
@@ -231,10 +231,10 @@ void AtlasGeneratorApp::shutdown(){
     delete gui;
 }
 
-void AtlasGeneratorApp::resizePackage(int w){
+void AtlasGeneratorApp::resizeBin(int w){
     mBinPackerSingle.setSize( w, w );
 	mBinPackerMulti.setSize(  w, w );
-    doPack();
+    pack();
 }
 
 bool AtlasGeneratorApp::addFolder(){
@@ -308,7 +308,7 @@ bool AtlasGeneratorApp::addTexture(){
     return false;
 }
 
-void AtlasGeneratorApp::exportPackage(){
+void AtlasGeneratorApp::exportBin(){
     fs::path path = getSaveFilePath("", ImageIo::getWriteExtensions());
     if( ! path.empty() ) {
         
@@ -449,7 +449,7 @@ void AtlasGeneratorApp::exportPackage(){
     hackTimer.start();
 }
 
-void AtlasGeneratorApp::doPack(){
+void AtlasGeneratorApp::pack(){
     switch( mMode ){
         case SINGLE:
             {
@@ -479,7 +479,7 @@ void AtlasGeneratorApp::doPack(){
                         // double the size...
                         int size = mBinPackerSingle.getWidth() << 1;
                         console() << "resize to: " << size << endl;
-                        resizePackage(size);
+                        resizeBin(size);
                     }
                 }
                 ((ciUITextInput *)gui->getWidget("size"))->setTextString(toString(mBinPackerSingle.getWidth()));
